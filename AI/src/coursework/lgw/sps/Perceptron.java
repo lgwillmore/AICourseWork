@@ -1,3 +1,4 @@
+package coursework.lgw.sps;
 
 /**
  * This is a perceptron that is designed to take any amount of double input
@@ -12,15 +13,15 @@ public class Perceptron {
 	/**
 	 * Constructor
 	 * 
-	 * @param input
+	 * @param inputs
 	 *            = number of inputs. inputs will be doubles
-	 * @param output
+	 * @param outputs
 	 *            = number of outputs. binary int.
 	 */
-	public Perceptron(int input, int output) {
-		nodes = new Node[output];
+	public Perceptron(int inputs, int outputs) {
+		nodes = new Node[outputs];
 		for (int i = 0; i < nodes.length; i++) {
-			nodes[i] = new Node(input);
+			nodes[i] = new Node(inputs);
 		}
 	}
 
@@ -69,13 +70,13 @@ public class Perceptron {
 			if (predict(in) != expected) {
 				if (expected == 1) {
 					weights[0] += 1;
-					for (int i = 1; i < weights.length; i++) {
-						weights[i] += in[i];
+					for (int i = 0; i < in.length; i++) {
+						weights[i+1] += in[i];
 					}
 				} else {
 					weights[0] += 1;
-					for (int i = 1; i < weights.length; i++) {
-						weights[i] -= in[i];
+					for (int i = 0; i < in.length; i++) {
+						weights[i+1] -= in[i];
 					}
 				}
 			}
