@@ -1,5 +1,7 @@
 package coursework.lgw.sps;
 
+import java.util.ArrayList;
+
 /**
  * This is a perceptron that is designed to take any amount of double input
  * values, and return any amount of binary integer values you want.
@@ -28,16 +30,16 @@ public class Perceptron {
 	/*
 	 * Train nodes on input instance and expected results.
 	 */
-	public void train(double[] input, int[] expected) {
+	public void train(ArrayList<Double> input, ArrayList<Integer> expected) {
 		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].train(input, expected[i]);
+			nodes[i].train(input, expected.get(i));
 		}
 	}
 
 	/*
 	 * Get a prediction on the input
 	 */
-	public int[] predict(double[] input) {
+	public int[] predict(ArrayList<Double> input) {
 		int[] result = new int[nodes.length];
 		for (int i = 0; i < nodes.length; i++) {
 			result[i] = nodes[i].predict(input);
@@ -66,26 +68,26 @@ public class Perceptron {
 			}
 		}
 
-		public void train(double[] in, int expected) {
+		public void train(ArrayList<Double> in, int expected) {
 			if (predict(in) != expected) {
 				if (expected == 1) {
 					weights[0] += 1;
-					for (int i = 0; i < in.length; i++) {
-						weights[i+1] += in[i];
+					for (int i = 0; i < in.size(); i++) {
+						weights[i+1] += in.get(i); 
 					}
 				} else {
 					weights[0] += 1;
-					for (int i = 0; i < in.length; i++) {
-						weights[i+1] -= in[i];
+					for (int i = 0; i < in.size(); i++) {
+						weights[i+1] -= in.get(i);
 					}
 				}
 			}
 		}
 
-		public int predict(double[] in) {
+		public int predict(ArrayList<Double> in) {
 			double sum = weights[0] * bias;
-			for (int i = 0; i < in.length; i++) {
-				sum += weights[i + 1] * in[i];
+			for (int i = 0; i < in.size(); i++) {
+				sum += weights[i + 1] * in.get(i); 
 			}
 			if (sum > 0)
 				return 1;

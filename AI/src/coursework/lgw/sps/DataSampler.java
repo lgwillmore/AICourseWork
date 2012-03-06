@@ -63,21 +63,39 @@ public class DataSampler {
 			switch(g){
 			case 0:				
 				if(st.size()>0){trainingSet.add(st.remove((int)(st.size()*Math.random())));
-				helixClassTrain.add(new ArrayList<Integer>(0));
-				coilClassTrain.add(new ArrayList<Integer>(0));
-				sheetClassTrain.add(new ArrayList<Integer>(1));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(0);
+				helixClassTrain.add(temp);
+				temp.clear();
+				temp.add(0);
+				coilClassTrain.add(temp);
+				temp.clear();
+				temp.add(1);
+				sheetClassTrain.add(temp);}
 				break;
 			case 1:				
 				if(ht.size()>0){trainingSet.add(ht.remove((int)(ht.size()*Math.random())));
-				helixClassTrain.add(new ArrayList<Integer>(1));
-				coilClassTrain.add(new ArrayList<Integer>(0));
-				sheetClassTrain.add(new ArrayList<Integer>(0));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(1);
+				helixClassTrain.add(temp);
+				temp.clear();
+				temp.add(0);
+				coilClassTrain.add(temp);
+				temp.clear();
+				temp.add(0);
+				sheetClassTrain.add(temp);}
 				break;
 			case 2:
 				if(ct.size()>0){trainingSet.add(ct.remove((int)(ct.size()*Math.random())));
-				helixClassTrain.add(new ArrayList<Integer>(0));
-				coilClassTrain.add(new ArrayList<Integer>(1));
-				sheetClassTrain.add(new ArrayList<Integer>(0));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(0);
+				helixClassTrain.add(temp);
+				temp.clear();
+				temp.add(1);
+				coilClassTrain.add(temp);
+				temp.clear();
+				temp.add(0);
+				sheetClassTrain.add(temp);}
 				break;
 			default:
 				break;				
@@ -94,28 +112,44 @@ public class DataSampler {
 			switch(g){
 			case 0:				
 				if(st.size()>0){testSet.add(st.remove((int)(st.size()*Math.random())));
-				helixClassTest.add(new ArrayList<Integer>(0));
-				coilClassTest.add(new ArrayList<Integer>(0));
-				sheetClassTest.add(new ArrayList<Integer>(1));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(0);
+				helixClassTest.add(temp);
+				temp.clear();
+				temp.add(0);
+				coilClassTest.add(temp);
+				temp.clear();
+				temp.add(1);
+				sheetClassTest.add(temp);}
 				break;
 			case 1:				
 				if(ht.size()>0){testSet.add(ht.remove((int)(ht.size()*Math.random())));
-				helixClassTest.add(new ArrayList<Integer>(1));
-				coilClassTest.add(new ArrayList<Integer>(0));
-				sheetClassTest.add(new ArrayList<Integer>(0));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(1);
+				helixClassTest.add(temp);
+				temp.clear();
+				temp.add(0);
+				coilClassTest.add(temp);
+				temp.clear();
+				temp.add(0);
+				sheetClassTest.add(temp);}
 				break;
 			case 2:
 				if(ct.size()>0){testSet.add(ct.remove((int)(ct.size()*Math.random())));
-				helixClassTest.add(new ArrayList<Integer>(0));
-				coilClassTest.add(new ArrayList<Integer>(1));
-				sheetClassTest.add(new ArrayList<Integer>(0));}
+				ArrayList<Integer> temp = new ArrayList<Integer>();
+				temp.add(0);
+				helixClassTest.add(temp);
+				temp.clear();
+				temp.add(1);
+				coilClassTest.add(temp);
+				temp.clear();
+				temp.add(0);
+				sheetClassTest.add(temp);}
 				break;
 			default:
 				break;				
 			}
-		}
-		System.out.println(testSet.size());
-		System.out.println(helixClassTest.size());
+		}		
 	}
 	
 	
@@ -273,5 +307,39 @@ public class DataSampler {
 		}
 		return vec;
 	}
+
+	public ArrayList<ArrayList<Integer>> getHelixClassTrain() {
+		return helixClassTrain;
+	}
+
+	public ArrayList<ArrayList<Integer>> getSheetClassTrain() {
+		return sheetClassTrain;
+	}
+
+	public ArrayList<ArrayList<Integer>> getCoilClassTrain() {
+		return coilClassTrain;
+	}
+
+	public ArrayList<ArrayList<Integer>> getHelixClassTest() {
+		return helixClassTest;
+	}
+
+	public ArrayList<ArrayList<Integer>> getSheetClassTest() {
+		return sheetClassTest;
+	}
+
+	public ArrayList<ArrayList<Integer>> getCoilClassTest() {
+		return coilClassTest;
+	}
+
+	public ArrayList<ArrayList<Double>> getTrainingSet() {
+		return trainingSet;
+	}
+
+	public ArrayList<ArrayList<Double>> getTestSet() {
+		return testSet;
+	}
+	
+	
 
 }
