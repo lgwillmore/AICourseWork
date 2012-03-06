@@ -66,36 +66,36 @@ public class DataSampler {
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(0);
 				helixClassTrain.add(temp);
-				temp.clear();
-				temp.add(0);
-				coilClassTrain.add(temp);
-				temp.clear();
-				temp.add(1);
-				sheetClassTrain.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(0);
+				coilClassTrain.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(1);
+				sheetClassTrain.add(temp2);}
 				break;
 			case 1:				
 				if(ht.size()>0){trainingSet.add(ht.remove((int)(ht.size()*Math.random())));
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(1);
 				helixClassTrain.add(temp);
-				temp.clear();
-				temp.add(0);
-				coilClassTrain.add(temp);
-				temp.clear();
-				temp.add(0);
-				sheetClassTrain.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(0);
+				coilClassTrain.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(0);
+				sheetClassTrain.add(temp2);}
 				break;
 			case 2:
 				if(ct.size()>0){trainingSet.add(ct.remove((int)(ct.size()*Math.random())));
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(0);
 				helixClassTrain.add(temp);
-				temp.clear();
-				temp.add(1);
-				coilClassTrain.add(temp);
-				temp.clear();
-				temp.add(0);
-				sheetClassTrain.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(1);
+				coilClassTrain.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(0);
+				sheetClassTrain.add(temp2);}
 				break;
 			default:
 				break;				
@@ -115,36 +115,36 @@ public class DataSampler {
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(0);
 				helixClassTest.add(temp);
-				temp.clear();
-				temp.add(0);
-				coilClassTest.add(temp);
-				temp.clear();
-				temp.add(1);
-				sheetClassTest.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(0);
+				coilClassTest.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(1);
+				sheetClassTest.add(temp2);}
 				break;
 			case 1:				
 				if(ht.size()>0){testSet.add(ht.remove((int)(ht.size()*Math.random())));
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(1);
 				helixClassTest.add(temp);
-				temp.clear();
-				temp.add(0);
-				coilClassTest.add(temp);
-				temp.clear();
-				temp.add(0);
-				sheetClassTest.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(0);
+				coilClassTest.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(0);
+				sheetClassTest.add(temp2);}
 				break;
 			case 2:
 				if(ct.size()>0){testSet.add(ct.remove((int)(ct.size()*Math.random())));
 				ArrayList<Integer> temp = new ArrayList<Integer>();
 				temp.add(0);
 				helixClassTest.add(temp);
-				temp.clear();
-				temp.add(1);
-				coilClassTest.add(temp);
-				temp.clear();
-				temp.add(0);
-				sheetClassTest.add(temp);}
+				ArrayList<Integer>temp1= new ArrayList<Integer>();
+				temp1.add(1);
+				coilClassTest.add(temp1);
+				ArrayList<Integer> temp2= new ArrayList<Integer>();
+				temp2.add(0);
+				sheetClassTest.add(temp2);}
 				break;
 			default:
 				break;				

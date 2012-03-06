@@ -62,7 +62,7 @@ public class Perceptron {
 		private Node(int inputs) {
 			weights = new double[inputs + 1];
 			// add weight for bias at index 0;
-			weights[0] = 0.3;
+			weights[0] = initWeight;
 			for (int i = 1; i < weights.length; i++) {
 				weights[i] = initWeight;
 			}
@@ -76,7 +76,7 @@ public class Perceptron {
 						weights[i+1] += in.get(i); 
 					}
 				} else {
-					weights[0] += 1;
+					weights[0] -= 1;
 					for (int i = 0; i < in.size(); i++) {
 						weights[i+1] -= in.get(i);
 					}
@@ -87,8 +87,8 @@ public class Perceptron {
 		public int predict(ArrayList<Double> in) {
 			double sum = weights[0] * bias;
 			for (int i = 0; i < in.size(); i++) {
-				sum += weights[i + 1] * in.get(i); 
-			}
+				sum += weights[i + 1] * in.get(i);
+			}			
 			if (sum > 0)
 				return 1;
 			return 0;
