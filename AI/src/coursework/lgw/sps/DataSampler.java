@@ -1,9 +1,11 @@
 package coursework.lgw.sps;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -15,14 +17,21 @@ public class DataSampler {
 			coilVectorsTest;
 	ArrayList<ArrayList<Integer>> helixClassTrain, sheetClassTrain,
 			coilClassTrain, helixClassTest, sheetClassTest, coilClassTest;
-	ArrayList<ArrayList<Double>> trainingSet,testSet;
+	ArrayList<ArrayList<Double>> trainingSet, testSet;
 	ArrayList<ArrayList<String>> tempVecs;
 	ArrayList<String> tempResults;
+	ArrayList<ArrayList<String>> stringTest, stringTrain;
 	int tempCounter;
 	public static final String HELIX = "h", SHEET = "e", COIL = "_",
 			START = "<>", END = "<end>";
 	private String train = "Data" + File.separator + "train";
 	private String test = "Data" + File.separator + "test";
+	private String trainStringsOut = "Data" + File.separator + "trainStrings.csv";
+	private String testStringsOut = "Data" + File.separator + "testStrings.csv";
+	private String trainDoubleOut = "Data" + File.separator + "trainNumerical.csv";
+	private String testDoubleOut = "Data" + File.separator + "testNumerical.csv";
+	boolean stPopped = false;
+	static boolean allStringPopped = false;
 
 	public DataSampler(int windowsize) {
 		this.windowsize = windowsize;
@@ -38,7 +47,7 @@ public class DataSampler {
 		helixClassTest = new ArrayList<ArrayList<Integer>>();
 		sheetClassTest = new ArrayList<ArrayList<Integer>>();
 		coilClassTest = new ArrayList<ArrayList<Integer>>();
-		trainingSet=new ArrayList<ArrayList<Double>>();
+		trainingSet = new ArrayList<ArrayList<Double>>();
 		testSet = new ArrayList<ArrayList<Double>>();
 	}
 
@@ -46,9 +55,117 @@ public class DataSampler {
 		buildData(train, this.helixVectorsTrain, this.sheetVectorsTrain,
 				this.coilVectorsTrain);
 		buildData(test, this.helixVectorsTest, this.sheetVectorsTest,
-				this.coilVectorsTest);		
-		buildSampleSets();		
-	}	
+				this.coilVectorsTest);
+		buildSampleSets();
+	}
+	
+	/*
+	 * Writes the amino acid string symbols to a csv files
+	 */
+	public void makeStringVectorCSVs() {
+		//write training
+		try {
+			// Create file
+			FileWriter fstream = new FileWriter(trainStringsOut);
+			BufferedWriter out = new BufferedWriter(fstream);
+			//write headings
+			for(int i=0;i<windowsize;i++){
+				out.append("AA "+(i+1)+",");
+			}
+			out.append("Helix,Sheet,Coil\n");
+			//write vectors
+			for (ArrayList<String> vector : stringTrain) {
+				for(int i=0;i<windowsize+2;i++){
+					out.append(vector.get(i)+",");
+				}
+				out.append(vector.get(windowsize+2)+"\n");
+			}
+			out.flush();
+			out.close();
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
+		//write test
+				try {
+					// Create file
+					FileWriter fstream = new FileWriter(testStringsOut);
+					BufferedWriter out = new BufferedWriter(fstream);
+					//write headings
+					for(int i=0;i<windowsize;i++){
+						out.append("AA "+(i+1)+",");
+					}
+					out.append("Helix,Sheet,Coil\n");
+					//write vectors
+					for (ArrayList<String> vector : stringTest) {
+						for(int i=0;i<windowsize+2;i++){
+							out.append(vector.get(i)+",");
+						}
+						out.append(vector.get(windowsize+2)+"\n");
+					}
+					out.flush();
+					out.close();
+				} catch (Exception e) {// Catch exception if any
+					System.err.println("Error: " + e.getMessage());
+				}
+	}
+	
+	public void makeNumericalVectorCSVs(){
+		//write training
+				try {
+					// Create file
+					FileWriter fstream = new FileWriter(trainDoubleOut);
+					BufferedWriter out = new BufferedWriter(fstream);
+					//write headings
+					for(int i=0;i<windowsize;i++){
+						for(int j=0;j<20;j++){
+							out.append("AA "+(i+1)+"-"+(j+1)+",");
+						}
+					}
+					out.append("ClassHSC\n");
+					//write vectors
+					for (int j =0;j<trainingSet.size();j++) {
+						ArrayList<Double> vector = trainingSet.get(j);
+						for(int i=0;i<windowsize*20;i++){
+							out.append(vector.get(i)+",");
+						}
+						if(helixClassTrain.get(j).get(0)==1)out.append("helix\n");
+						else if(sheetClassTrain.get(j).get(0)==1)out.append("sheet\n");
+						else if(coilClassTrain.get(j).get(0)==1)out.append("coil\n");	
+						
+					}
+					out.flush();
+					out.close();
+				} catch (Exception e) {// Catch exception if any
+					System.err.println("Error: " + e.getMessage());
+				}
+				//write test
+						try {
+							// Create file
+							FileWriter fstream = new FileWriter(testDoubleOut);
+							BufferedWriter out = new BufferedWriter(fstream);
+							//write headings
+							for(int i=0;i<windowsize;i++){
+								for(int j=0;j<20;j++){
+									out.append("AA "+(i+1)+"-"+(j+1)+",");
+								}
+							}
+							out.append("ClassHSC\n");
+							//write vectors
+							for (int j =0;j<testSet.size();j++) {
+								ArrayList<Double> vector = testSet.get(j);
+								for(int i=0;i<windowsize*20;i++){
+									out.append(vector.get(i)+",");
+								}
+								if(helixClassTest.get(j).get(0)==1)out.append("helix\n");
+								else if(sheetClassTest.get(j).get(0)==1)out.append("sheet\n");
+								else if(coilClassTest.get(j).get(0)==1)out.append("coil\n");
+							}
+							out.flush();
+							out.close();
+						} catch (Exception e) {// Catch exception if any
+							System.err.println("Error: " + e.getMessage());
+						}
+	}
 
 	private void buildData(String filepath,
 			ArrayList<ArrayList<Double>> helixVec,
@@ -66,11 +183,10 @@ public class DataSampler {
 			boolean inProtein = false;
 			// Read File Line By Line
 			while ((strLine = br.readLine()) != null) {
-				String line = strLine.trim();				
+				String line = strLine.trim();
 				if (line.equals(START)) {
 					inProtein = true;
-				} 
-				else if (inProtein) {
+				} else if (inProtein) {
 					if (line.equals(END)) {
 						window.clear();
 						inProtein = false;
@@ -78,18 +194,17 @@ public class DataSampler {
 						window.add(line);
 						if (window.size() == windowsize) {
 							analyseSegment(window);
-						}
-						else if (window.size() > windowsize) {
+						} else if (window.size() > windowsize) {
 							window.poll();
 							analyseSegment(window);
-	
+
 						}
 					}
 				}
 			}
 			// Close the input stream
 			in.close();
-		} catch (Exception e) {			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		populateVectorsAndResults(helixVec, sheetVec, coilVec);
@@ -101,8 +216,8 @@ public class DataSampler {
 			String line = segment.get(i);
 			String amino = line.substring(0, 1);
 			vec.add(amino);
-			if (i+1 == windowsize / 2 + 1){
-				String c=line.substring(1);
+			if (i + 1 == windowsize / 2 + 1) {
+				String c = line.substring(1);
 				tempResults.add(c);
 			}
 		}
@@ -112,133 +227,179 @@ public class DataSampler {
 	private void populateVectorsAndResults(
 			ArrayList<ArrayList<Double>> helixVec,
 			ArrayList<ArrayList<Double>> sheetVec,
-			ArrayList<ArrayList<Double>> coilVec) {		
+			ArrayList<ArrayList<Double>> coilVec) {
+		// sort the vectors into their classes
 		for (int i = 0; i < tempVecs.size(); i++) {
 			ArrayList<String> sVec = tempVecs.get(i);
 			String c = tempResults.get(i).trim();
 			if (c.equals(HELIX)) {
-				helixVec.add(getWindowVector(sVec)); 
+				helixVec.add(getWindowVector(sVec));
+				if (!allStringPopped) {
+					sVec.add("1");
+					sVec.add("0");
+					sVec.add("0");
+				}
 			} else if (c.equals(SHEET)) {
 				sheetVec.add(getWindowVector(sVec));
+				if (!allStringPopped) {
+					sVec.add("0");
+					sVec.add("1");
+					sVec.add("0");
+				}
 			} else if (c.equals(COIL)) {
 				coilVec.add(getWindowVector(sVec));
+				if (!allStringPopped) {
+					sVec.add("0");
+					sVec.add("0");
+					sVec.add("1");
+				}
+			}
+		}
+		// build the string output arrays
+		if (!allStringPopped) {
+			if (!stPopped) {
+				stringTrain = tempVecs;
+				stPopped = true;
+			} else {
+				stringTest = tempVecs;
+				allStringPopped = true;
 			}
 		}
 	}
 
 	private void buildSampleSets() {
-		int smallest=sheetVectorsTrain.size();
-		if(smallest>helixVectorsTrain.size())smallest=helixVectorsTrain.size();
-		if(smallest>coilVectorsTrain.size())smallest=coilVectorsTrain.size();
-		LinkedList<ArrayList<Double>> st = getRandomVectors(sheetVectorsTrain, smallest);
-		LinkedList<ArrayList<Double>> ht = getRandomVectors(helixVectorsTrain, smallest);
-		LinkedList<ArrayList<Double>> ct = getRandomVectors(coilVectorsTrain, smallest);
-		while(st.size()>0||ht.size()>0||ct.size()>0){
-			int g = (int)(3*Math.random());
-			
-			switch(g){
-			case 0:				
-				if(st.size()>0){trainingSet.add(st.remove((int)(st.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(0);
-				helixClassTrain.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(0);
-				coilClassTrain.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(1);
-				sheetClassTrain.add(temp2);}
+		int smallest = sheetVectorsTrain.size();
+		if (smallest > helixVectorsTrain.size())
+			smallest = helixVectorsTrain.size();
+		if (smallest > coilVectorsTrain.size())
+			smallest = coilVectorsTrain.size();
+		LinkedList<ArrayList<Double>> st = getRandomVectors(sheetVectorsTrain,
+				smallest);
+		LinkedList<ArrayList<Double>> ht = getRandomVectors(helixVectorsTrain,
+				smallest);
+		LinkedList<ArrayList<Double>> ct = getRandomVectors(coilVectorsTrain,
+				smallest);
+		while (st.size() > 0 || ht.size() > 0 || ct.size() > 0) {
+			int g = (int) (3 * Math.random());
+
+			switch (g) {
+			case 0:
+				if (st.size() > 0) {
+					trainingSet
+							.add(st.remove((int) (st.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(0);
+					helixClassTrain.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(0);
+					coilClassTrain.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(1);
+					sheetClassTrain.add(temp2);
+				}
 				break;
-			case 1:				
-				if(ht.size()>0){trainingSet.add(ht.remove((int)(ht.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(1);
-				helixClassTrain.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(0);
-				coilClassTrain.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(0);
-				sheetClassTrain.add(temp2);}
+			case 1:
+				if (ht.size() > 0) {
+					trainingSet
+							.add(ht.remove((int) (ht.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(1);
+					helixClassTrain.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(0);
+					coilClassTrain.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(0);
+					sheetClassTrain.add(temp2);
+				}
 				break;
 			case 2:
-				if(ct.size()>0){trainingSet.add(ct.remove((int)(ct.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(0);
-				helixClassTrain.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(1);
-				coilClassTrain.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(0);
-				sheetClassTrain.add(temp2);}
+				if (ct.size() > 0) {
+					trainingSet
+							.add(ct.remove((int) (ct.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(0);
+					helixClassTrain.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(1);
+					coilClassTrain.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(0);
+					sheetClassTrain.add(temp2);
+				}
 				break;
 			default:
-				break;				
+				break;
 			}
 		}
-		smallest=sheetVectorsTest.size();
-		if(smallest>helixVectorsTest.size())smallest=helixVectorsTest.size();
-		if(smallest>coilVectorsTest.size())smallest=coilVectorsTest.size();
+		smallest = sheetVectorsTest.size();
+		if (smallest > helixVectorsTest.size())
+			smallest = helixVectorsTest.size();
+		if (smallest > coilVectorsTest.size())
+			smallest = coilVectorsTest.size();
 		st = getRandomVectors(sheetVectorsTest, smallest);
 		ht = getRandomVectors(helixVectorsTest, smallest);
 		ct = getRandomVectors(coilVectorsTest, smallest);
-		while(st.size()>0||ht.size()>0||ct.size()>0){
-			int g = (int)(3*Math.random());			
-			switch(g){
-			case 0:				
-				if(st.size()>0){testSet.add(st.remove((int)(st.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(0);
-				helixClassTest.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(0);
-				coilClassTest.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(1);
-				sheetClassTest.add(temp2);}
+		while (st.size() > 0 || ht.size() > 0 || ct.size() > 0) {
+			int g = (int) (3 * Math.random());
+			switch (g) {
+			case 0:
+				if (st.size() > 0) {
+					testSet.add(st.remove((int) (st.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(0);
+					helixClassTest.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(0);
+					coilClassTest.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(1);
+					sheetClassTest.add(temp2);
+				}
 				break;
-			case 1:				
-				if(ht.size()>0){testSet.add(ht.remove((int)(ht.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(1);
-				helixClassTest.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(0);
-				coilClassTest.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(0);
-				sheetClassTest.add(temp2);}
+			case 1:
+				if (ht.size() > 0) {
+					testSet.add(ht.remove((int) (ht.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(1);
+					helixClassTest.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(0);
+					coilClassTest.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(0);
+					sheetClassTest.add(temp2);
+				}
 				break;
 			case 2:
-				if(ct.size()>0){testSet.add(ct.remove((int)(ct.size()*Math.random())));
-				ArrayList<Integer> temp = new ArrayList<Integer>();
-				temp.add(0);
-				helixClassTest.add(temp);
-				ArrayList<Integer>temp1= new ArrayList<Integer>();
-				temp1.add(1);
-				coilClassTest.add(temp1);
-				ArrayList<Integer> temp2= new ArrayList<Integer>();
-				temp2.add(0);
-				sheetClassTest.add(temp2);}
+				if (ct.size() > 0) {
+					testSet.add(ct.remove((int) (ct.size() * Math.random())));
+					ArrayList<Integer> temp = new ArrayList<Integer>();
+					temp.add(0);
+					helixClassTest.add(temp);
+					ArrayList<Integer> temp1 = new ArrayList<Integer>();
+					temp1.add(1);
+					coilClassTest.add(temp1);
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.add(0);
+					sheetClassTest.add(temp2);
+				}
 				break;
 			default:
-				break;				
+				break;
 			}
-		}		
+		}
 	}
-	
-	
 
 	private LinkedList<ArrayList<Double>> getRandomVectors(
 			ArrayList<ArrayList<Double>> vectors, int amount) {
 		LinkedList<ArrayList<Double>> result = new LinkedList<ArrayList<Double>>();
-		LinkedList<ArrayList<Double>> vecs = new LinkedList<ArrayList<Double>>();		
-		for(int i=0;i<vectors.size();i++){			
+		LinkedList<ArrayList<Double>> vecs = new LinkedList<ArrayList<Double>>();
+		for (int i = 0; i < vectors.size(); i++) {
 			vecs.add(vectors.get(i));
 		}
 		for (int j = 0; j < amount; j++) {
-			int k =(int)(vecs.size()*Math.random());
+			int k = (int) (vecs.size() * Math.random());
 			result.add(vecs.remove(k));
 		}
 		return result;
@@ -341,7 +502,5 @@ public class DataSampler {
 	public ArrayList<ArrayList<Double>> getTestSet() {
 		return testSet;
 	}
-	
-	
 
 }

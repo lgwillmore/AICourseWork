@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ProteinMain {
 
-	private static int train = 500, runs = 5,window = 21;
+	private static int train = 500, runs = 1,window = 13;
 
 	public static void main(String[] args) {
 		
@@ -31,6 +31,8 @@ public class ProteinMain {
 					io.getSheetClassTest());
 			double q3= (hcp+ccp+scp)/io.getTestSet().size();
 			System.out.println("Q3: "+q3);
+			io.makeStringVectorCSVs();
+			io.makeNumericalVectorCSVs();
 		}
 	}
 
