@@ -46,8 +46,84 @@ public class DataSampler {
 		buildData(train, this.helixVectorsTrain, this.sheetVectorsTrain,
 				this.coilVectorsTrain);
 		buildData(test, this.helixVectorsTest, this.sheetVectorsTest,
-				this.coilVectorsTest);
+				this.coilVectorsTest);		
 		buildSampleSets();		
+	}	
+
+	private void buildData(String filepath,
+			ArrayList<ArrayList<Double>> helixVec,
+			ArrayList<ArrayList<Double>> sheetVec,
+			ArrayList<ArrayList<Double>> coilVec) {
+		LinkedList<String> window = new LinkedList<String>();
+		tempVecs = new ArrayList<ArrayList<String>>();
+		tempResults = new ArrayList<String>();
+		tempCounter = 0;
+		try {
+			FileInputStream fstream = new FileInputStream(filepath);
+			DataInputStream in = new DataInputStream(fstream);
+			BufferedReader br = new BufferedReader(new InputStreamReader(in));
+			String strLine;
+			boolean inProtein = false;
+			// Read File Line By Line
+			while ((strLine = br.readLine()) != null) {
+				String line = strLine.trim();				
+				if (line.equals(START)) {
+					inProtein = true;
+				} 
+				else if (inProtein) {
+					if (line.equals(END)) {
+						window.clear();
+						inProtein = false;
+					} else {
+						window.add(line);
+						if (window.size() == windowsize) {
+							analyseSegment(window);
+						}
+						else if (window.size() > windowsize) {
+							window.poll();
+							analyseSegment(window);
+	
+						}
+					}
+				}
+			}
+			// Close the input stream
+			in.close();
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+		populateVectorsAndResults(helixVec, sheetVec, coilVec);
+	}
+
+	private void analyseSegment(LinkedList<String> segment) {
+		ArrayList<String> vec = new ArrayList<String>();
+		for (int i = 0; i < segment.size(); i++) {
+			String line = segment.get(i);
+			String amino = line.substring(0, 1);
+			vec.add(amino);
+			if (i+1 == windowsize / 2 + 1){
+				String c=line.substring(1);
+				tempResults.add(c);
+			}
+		}
+		tempVecs.add(vec);
+	}
+
+	private void populateVectorsAndResults(
+			ArrayList<ArrayList<Double>> helixVec,
+			ArrayList<ArrayList<Double>> sheetVec,
+			ArrayList<ArrayList<Double>> coilVec) {		
+		for (int i = 0; i < tempVecs.size(); i++) {
+			ArrayList<String> sVec = tempVecs.get(i);
+			String c = tempResults.get(i).trim();
+			if (c.equals(HELIX)) {
+				helixVec.add(getWindowVector(sVec)); 
+			} else if (c.equals(SHEET)) {
+				sheetVec.add(getWindowVector(sVec));
+			} else if (c.equals(COIL)) {
+				coilVec.add(getWindowVector(sVec));
+			}
+		}
 	}
 
 	private void buildSampleSets() {
@@ -166,80 +242,6 @@ public class DataSampler {
 			result.add(vecs.remove(k));
 		}
 		return result;
-	}
-
-	private void buildData(String filepath,
-			ArrayList<ArrayList<Double>> helixVec,
-			ArrayList<ArrayList<Double>> sheetVec,
-			ArrayList<ArrayList<Double>> coilVec) {
-		LinkedList<String> window = new LinkedList<String>();
-		tempVecs = new ArrayList<ArrayList<String>>();
-		tempResults = new ArrayList<String>();
-		tempCounter = 0;
-		try {
-			FileInputStream fstream = new FileInputStream(filepath);
-			DataInputStream in = new DataInputStream(fstream);
-			BufferedReader br = new BufferedReader(new InputStreamReader(in));
-			String strLine;
-			boolean inProtein = false;
-			// Read File Line By Line
-			while ((strLine = br.readLine()) != null) {
-				String line = strLine.trim();				
-				if (line.equals(START)) {
-					inProtein = true;
-				} 
-				else if (inProtein) {
-					if (line.equals(END)) {
-						window.clear();
-						inProtein = false;
-					} else {
-						window.add(line);
-						if (window.size() == windowsize) {
-							analyseSegment(window);
-						}
-						else if (window.size() > windowsize) {
-							window.poll();
-							analyseSegment(window);
-
-						}
-					}
-				}
-			}
-			// Close the input stream
-			in.close();
-		} catch (Exception e) {			
-			e.printStackTrace();
-		}
-		populateVectorsAndResults(helixVec, sheetVec, coilVec);
-	}
-
-	private void analyseSegment(LinkedList<String> segment) {
-		ArrayList<String> vec = new ArrayList<String>();
-		for (int i = 0; i < segment.size(); i++) {
-			String line = segment.get(i);
-			String amino = line.substring(0, 1);
-			vec.add(amino);
-			if (i == windowsize / 2 + 1)
-				tempResults.add(line.substring(1));
-		}
-		tempVecs.add(vec);
-	}
-
-	private void populateVectorsAndResults(
-			ArrayList<ArrayList<Double>> helixVec,
-			ArrayList<ArrayList<Double>> sheetVec,
-			ArrayList<ArrayList<Double>> coilVec) {		
-		for (int i = 0; i < tempVecs.size(); i++) {
-			ArrayList<String> sVec = tempVecs.get(i);
-			String c = tempResults.get(i).trim();
-			if (c.equals(HELIX)) {
-				helixVec.add(getWindowVector(sVec)); 
-			} else if (c.equals(SHEET)) {
-				sheetVec.add(getWindowVector(sVec));
-			} else if (c.equals(COIL)) {
-				coilVec.add(getWindowVector(sVec));
-			}
-		}
 	}
 
 	private ArrayList<Double> getWindowVector(ArrayList<String> sVec) {
