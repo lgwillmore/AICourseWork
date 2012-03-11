@@ -431,7 +431,7 @@ public class DataSampler {
 		} else if (aa.equals("H")) {
 			return makeVector(6);
 		} else if (aa.equals("I")) {
-			return makeVector(6);
+			return makeVector(7);
 		} else if (aa.equals("K")) {
 			return makeVector(8);
 		} else if (aa.equals("L")) {

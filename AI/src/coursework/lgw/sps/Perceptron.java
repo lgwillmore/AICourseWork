@@ -28,12 +28,15 @@ public class Perceptron {
 	}
 
 	/*
-	 * Train nodes on input instance and expected results.
+	 * Train nodes on input instance and expected results. If training was not
+	 * required returns true, else false
 	 */
-	public void train(ArrayList<Double> input, ArrayList<Integer> expected) {
+	public boolean train(ArrayList<Double> input, ArrayList<Integer> expected) {
+		boolean trainingNotRequired = true;
 		for (int i = 0; i < nodes.length; i++) {
-			nodes[i].train(input, expected.get(i));
+			if(!nodes[i].train(input, expected.get(i)))trainingNotRequired=false;
 		}
+		return trainingNotRequired;
 	}
 
 	/*
@@ -61,34 +64,39 @@ public class Perceptron {
 
 		private Node(int inputs) {
 			weights = new double[inputs + 1];
-			// add weight for bias at index 0;
-			weights[0] = initWeight;
-			for (int i = 1; i < weights.length; i++) {
+			// add weight for bias at index 0;			
+			for (int i = 0; i < weights.length; i++) {
 				weights[i] = initWeight;
 			}
 		}
 
-		public void train(ArrayList<Double> in, int expected) {
+		/*
+		 * Trains the node on given input and class. If training was not
+		 * required, returns true, else false.
+		 */
+		public boolean train(ArrayList<Double> in, int expected) {
 			if (predict(in) != expected) {
 				if (expected == 1) {
 					weights[0] += 1;
 					for (int i = 0; i < in.size(); i++) {
-						weights[i+1] += in.get(i); 
+						weights[i + 1] += in.get(i);
 					}
 				} else {
 					weights[0] -= 1;
 					for (int i = 0; i < in.size(); i++) {
-						weights[i+1] -= in.get(i);
+						weights[i + 1] -= in.get(i);
 					}
 				}
+				return false;
 			}
+			return true;
 		}
 
 		public int predict(ArrayList<Double> in) {
 			double sum = weights[0] * bias;
 			for (int i = 0; i < in.size(); i++) {
 				sum += weights[i + 1] * in.get(i);
-			}			
+			}
 			if (sum > 0)
 				return 1;
 			return 0;
