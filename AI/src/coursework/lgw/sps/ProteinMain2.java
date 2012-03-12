@@ -1,6 +1,9 @@
 package coursework.lgw.sps;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ProteinMain2 {
@@ -8,6 +11,7 @@ public class ProteinMain2 {
 	private static int maxtrain = 100, window = 5, step = 1000, start = 1000;
 	private static String resultPath = "Results" + File.separator
 			+ "Perc-w5-mt100.csv";
+	private static BufferedWriter out;
 
 	public static void main(String[] args) {
 		DataSampler io = new DataSampler(window);
@@ -17,6 +21,16 @@ public class ProteinMain2 {
 	}
 
 	private static void analyze(DataSampler io) {
+		try {
+			// Create file
+			FileWriter fstream = new FileWriter(resultPath);
+			BufferedWriter out = new BufferedWriter(fstream);
+			//write headings			
+			//TODO: Write the headings
+			
+		} catch (Exception e) {// Catch exception if any
+			System.err.println("Error: " + e.getMessage());
+		}
 		int mtr = io.getTrainSizeAvailable();
 		int counter = start;
 		while (counter < mtr) {
@@ -52,6 +66,13 @@ public class ProteinMain2 {
 			System.out.println("Q3: " + q3);
 			counter+=step;
 		}
+		try {
+			out.flush();
+			out.close();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
 	}
 
 	private static double test(ArrayList<ArrayList<Double>> testVecs,
