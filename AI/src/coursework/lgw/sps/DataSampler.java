@@ -55,8 +55,7 @@ public class DataSampler {
 		buildData(train, this.helixVectorsTrain, this.sheetVectorsTrain,
 				this.coilVectorsTrain);
 		buildData(test, this.helixVectorsTest, this.sheetVectorsTest,
-				this.coilVectorsTest);
-		buildSampleSets();
+				this.coilVectorsTest);		
 	}
 	
 	/*
@@ -267,19 +266,12 @@ public class DataSampler {
 		}
 	}
 
-	private void buildSampleSets() {
-		int smallest = sheetVectorsTrain.size();
-		if (smallest > helixVectorsTrain.size())
-			smallest = helixVectorsTrain.size();
-		if (smallest > coilVectorsTrain.size())
-			smallest = coilVectorsTrain.size();
-		LinkedList<ArrayList<Double>> st = getRandomVectors(sheetVectorsTrain,
-				smallest);
-		LinkedList<ArrayList<Double>> ht = getRandomVectors(helixVectorsTrain,
-				smallest);
-		LinkedList<ArrayList<Double>> ct = getRandomVectors(coilVectorsTrain,
-				smallest);
-		while (st.size() > 0 || ht.size() > 0 || ct.size() > 0) {
+	public void buildSampleSets(int trainSize,int testSize) {		
+		LinkedList<ArrayList<Double>> st = getRandomVectors(sheetVectorsTrain);
+		LinkedList<ArrayList<Double>> ht = getRandomVectors(helixVectorsTrain);
+		LinkedList<ArrayList<Double>> ct = getRandomVectors(coilVectorsTrain);
+		int count=0;
+		while ((st.size() > 0 || ht.size() > 0 || ct.size() > 0)&&(count<trainSize)) {
 			int g = (int) (3 * Math.random());
 
 			switch (g) {
@@ -296,6 +288,7 @@ public class DataSampler {
 					ArrayList<Integer> temp2 = new ArrayList<Integer>();
 					temp2.add(1);
 					sheetClassTrain.add(temp2);
+					count++;
 				}
 				break;
 			case 1:
@@ -311,6 +304,7 @@ public class DataSampler {
 					ArrayList<Integer> temp2 = new ArrayList<Integer>();
 					temp2.add(0);
 					sheetClassTrain.add(temp2);
+					count++;
 				}
 				break;
 			case 2:
@@ -326,21 +320,18 @@ public class DataSampler {
 					ArrayList<Integer> temp2 = new ArrayList<Integer>();
 					temp2.add(0);
 					sheetClassTrain.add(temp2);
+					count++;
 				}
 				break;
 			default:
 				break;
 			}
-		}
-		smallest = sheetVectorsTest.size();
-		if (smallest > helixVectorsTest.size())
-			smallest = helixVectorsTest.size();
-		if (smallest > coilVectorsTest.size())
-			smallest = coilVectorsTest.size();
-		st = getRandomVectors(sheetVectorsTest, smallest);
-		ht = getRandomVectors(helixVectorsTest, smallest);
-		ct = getRandomVectors(coilVectorsTest, smallest);
-		while (st.size() > 0 || ht.size() > 0 || ct.size() > 0) {
+		}		
+		st = getRandomVectors(sheetVectorsTest);
+		ht = getRandomVectors(helixVectorsTest);
+		ct = getRandomVectors(coilVectorsTest);
+		count=0;
+		while ((st.size() > 0 || ht.size() > 0 || ct.size() > 0)&&(count<testSize)) {
 			int g = (int) (3 * Math.random());
 			switch (g) {
 			case 0:
@@ -392,13 +383,13 @@ public class DataSampler {
 	}
 
 	private LinkedList<ArrayList<Double>> getRandomVectors(
-			ArrayList<ArrayList<Double>> vectors, int amount) {
+			ArrayList<ArrayList<Double>> vectors) {
 		LinkedList<ArrayList<Double>> result = new LinkedList<ArrayList<Double>>();
 		LinkedList<ArrayList<Double>> vecs = new LinkedList<ArrayList<Double>>();
 		for (int i = 0; i < vectors.size(); i++) {
 			vecs.add(vectors.get(i));
-		}
-		for (int j = 0; j < amount; j++) {
+		}		
+		for (int j = 0; j < vectors.size(); j++) {
 			int k = (int) (vecs.size() * Math.random());
 			result.add(vecs.remove(k));
 		}
@@ -501,6 +492,14 @@ public class DataSampler {
 
 	public ArrayList<ArrayList<Double>> getTestSet() {
 		return testSet;
+	}
+	
+	public int getTrainSizeAvailable(){
+		return (helixVectorsTrain.size()+coilVectorsTrain.size()+sheetVectorsTrain.size());
+	}
+	
+	public int getTestSizeAvailable(){
+		return (helixVectorsTest.size()+coilVectorsTest.size()+sheetVectorsTest.size());
 	}
 
 }
