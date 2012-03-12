@@ -266,7 +266,15 @@ public class DataSampler {
 		}
 	}
 
-	public void buildSampleSets(int trainSize,int testSize) {		
+	public void buildSampleSets(int trainSize,int testSize) {
+		this.trainingSet= new ArrayList<ArrayList<Double>>();
+		this.testSet= new ArrayList<ArrayList<Double>>();
+		this.helixClassTrain=new ArrayList<ArrayList<Integer>>();
+		this.sheetClassTrain=new ArrayList<ArrayList<Integer>>();
+		this.coilClassTrain=new ArrayList<ArrayList<Integer>>();
+		this.helixClassTest=new ArrayList<ArrayList<Integer>>();
+		this.sheetClassTest=new ArrayList<ArrayList<Integer>>();
+		this.coilClassTest=new ArrayList<ArrayList<Integer>>();
 		LinkedList<ArrayList<Double>> st = getRandomVectors(sheetVectorsTrain);
 		LinkedList<ArrayList<Double>> ht = getRandomVectors(helixVectorsTrain);
 		LinkedList<ArrayList<Double>> ct = getRandomVectors(coilVectorsTrain);
